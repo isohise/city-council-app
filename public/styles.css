@@ -1,0 +1,168 @@
+:root{
+  --bg:#0f1115;
+  --panel:#151923;
+  --muted:#9aa3b2;
+  --text:#e6e8ee;
+  --brand:#6ea8fe;
+  --accent:#8ed1a5;
+  --danger:#ff6b6b;
+  --border:#222838;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --radius:14px;
+  --radius-sm:10px;
+  --space:16px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Noto Sans",Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji";
+  background:linear-gradient(180deg,#0d0f15, #111521 35%, #0f1115);
+  color:var(--text);
+}
+
+/* --------- Topbar --------- */
+.topbar{
+  position:sticky; top:0; z-index:5;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 18px;
+  background:rgba(17,21,33,.85);
+  backdrop-filter: blur(8px);
+  border-bottom:1px solid var(--border);
+}
+.brand{display:flex; align-items:center; gap:10px}
+.brand .logo{font-size:22px}
+.brand .title{font-weight:700; letter-spacing:.3px}
+
+.session{display:flex; align-items:center; gap:12px}
+.login-form{display:flex; gap:8px}
+.login-form input{
+  width:200px;
+  padding:8px 10px; border-radius:10px; border:1px solid var(--border);
+  background:#0d111a; color:var(--text);
+}
+.login-form button{min-width:90px}
+
+.user-panel{display:flex; align-items:center; gap:10px}
+.user-panel .secondary{opacity:.9}
+
+/* --------- Buttons --------- */
+button{
+  appearance:none; border:0; cursor:pointer;
+  padding:10px 14px;
+  background:linear-gradient(180deg,#6ea8fe,#4c82fb);
+  color:white; border-radius:12px; font-weight:600;
+  box-shadow: var(--shadow);
+}
+button.secondary{
+  background:#1a2030; color:var(--text);
+  border:1px solid var(--border); box-shadow:none;
+}
+button.danger{
+  background:linear-gradient(180deg,#ff7b7b,#ff5c5c);
+}
+button:disabled{opacity:.6; cursor:not-allowed}
+
+/* --------- Layout --------- */
+.container{max-width:1100px; margin:22px auto; padding:0 16px}
+
+.tabs{
+  display:flex; gap:8px; margin:8px 0 18px;
+  border-bottom:1px solid var(--border); padding-bottom:10px;
+}
+.tab{
+  background:#141927; color:var(--text);
+  border:1px solid var(--border); border-bottom:none;
+  border-radius:10px 10px 0 0; padding:10px 14px; font-weight:600;
+}
+.tab.active{background:#182033; color:#fff}
+
+.tabpane{display:block}
+.tabpane.hidden{display:none}
+
+.pane-header{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin-bottom:12px;
+}
+
+/* --------- Cards / Lists --------- */
+.card{
+  background:linear-gradient(180deg,#121826,#121a2a);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:14px;
+  box-shadow: var(--shadow);
+}
+.mt{margin-top:12px}
+
+.list{display:grid; gap:12px}
+.list .item{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:14px; border:1px solid var(--border);
+  background:#121622; border-radius:var(--radius-sm);
+  transition: transform .06s ease;
+}
+.list .item:hover{transform: translateY(-1px)}
+
+/* --------- Forms / Grid --------- */
+label{display:flex; flex-direction:column; gap:6px; font-size:13px; color:var(--muted)}
+input, textarea, select{
+  padding:10px 12px; border-radius:10px; border:1px solid var(--border);
+  background:#0c1018; color:var(--text); outline:none;
+}
+textarea{resize:vertical}
+
+.grid{display:grid; gap:12px}
+.grid.one{grid-template-columns:1fr}
+.grid.two{grid-template-columns:repeat(2,1fr)}
+.grid.three{grid-template-columns:repeat(3,1fr)}
+.grid .full{grid-column:1 / -1}
+.right{display:flex; justify-content:flex-end; gap:8px}
+
+@media (max-width:760px){
+  .login-form input{width:140px}
+  .grid.two, .grid.three{grid-template-columns:1fr}
+}
+
+/* --------- Split --------- */
+.split{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+@media (max-width:900px){ .split{grid-template-columns:1fr} }
+
+/* --------- Muted text --------- */
+.muted{color:var(--muted); font-size:13px}
+
+/* --------- Modal (dialog) --------- */
+.modal{
+  border:0; padding:0; border-radius:16px;
+  background:transparent; color:inherit;
+}
+.modal::backdrop{background:rgba(4,6,10,.6); backdrop-filter: blur(2px)}
+.modal .modal-body{
+  background:#111624; border:1px solid var(--border);
+  border-radius:16px; padding:18px; width:min(780px, 92vw);
+  box-shadow: var(--shadow);
+}
+.modal .modal-close{
+  float:right; border:1px solid var(--border); background:#1a2030;
+  color:#fff; border-radius:10px; padding:6px 10px; cursor:pointer;
+}
+
+/* --------- Tables --------- */
+.table-wrap{overflow:auto; border-radius:12px; border:1px solid var(--border)}
+table{width:100%; border-collapse:collapse; min-width:420px; background:#0f1422}
+th, td{padding:10px 12px; border-bottom:1px solid var(--border); text-align:left}
+th{position:sticky; top:0; background:#131a2b; z-index:1}
+tr:hover td{background:#10172a}
+
+/* --------- Toast --------- */
+.toast{
+  position:fixed; bottom:18px; right:18px; z-index:20;
+  background:#182033; border:1px solid var(--border);
+  color:var(--text); padding:12px 14px; border-radius:12px;
+  box-shadow: var(--shadow);
+}
+.hidden{display:none !important}
+
+/* --------- Admin visibility --------- */
+.admin-only.hidden{display:none !important}

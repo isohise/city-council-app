@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Городская Дума — Комиссии, члены, заседания, отчёты</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🏛️</span>
+      <span class="title">Городская Дума</span>
+    </div>
+    <div class="session">
+      <form id="loginForm" class="login-form">
+        <input id="loginUsername" type="text" placeholder="Логин (admin или user)" required />
+        <input id="loginPassword" type="password" placeholder="Пароль (qwerty)" required />
+        <button type="submit">Войти</button>
+      </form>
+
+      <div id="userPanel" class="user-panel hidden">
+        <span id="whoami"></span>
+        <button id="logoutBtn" class="secondary">Выйти</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav id="tabs" class="tabs hidden">
+      <button data-tab="commissions" class="tab active">Комиссии</button>
+      <button data-tab="members" class="tab">Члены</button>
+      <button data-tab="meetings" class="tab">Заседания</button>
+      <button data-tab="reports" class="tab">Отчёты</button>
+    </nav>
+
+    <!-- Комиссии -->
+    <section id="tab-commissions" class="tabpane">
+      <div class="pane-header">
+        <h2>Комиссии</h2>
+        <div id="adminCommissionControls" class="admin-only hidden">
+          <details class="card">
+            <summary><strong>Добавить комиссию</strong> (только администратор)</summary>
+            <form id="createCommissionForm" class="grid two">
+              <label>Название
+                <input name="name" type="text" required />
+              </label>
+              <label>Профиль
+                <input name="profile" type="text" />
+              </label>
+              <label class="full">Описание
+                <textarea name="description" rows="2"></textarea>
+              </label>
+              <label>Председатель (ID члена, опц.)
+                <input name="chair_id" type="number" min="1" />
+              </label>
+              <label>Дата начала председ-ва
+                <input name="chair_start_date" type="date" />
+              </label>
+              <div class="full right">
+                <button type="submit">Создать комиссию</button>
+              </div>
+            </form>
+          </details>
+        </div>
+      </div>
+
+      <div id="commissionsList" class="list"></div>
+
+      <dialog id="commissionDialog" class="modal">
+        <div class="modal-body">
+          <button class="modal-close" data-close>×</button>
+          <h3 id="commissionTitle"></h3>
+          <div id="commissionMeta" class="muted"></div>
+
+          <div class="split">
+            <div class="card">
+              <h4>Состав</h4>
+              <div id="commissionMembers"></div>
+
+              <details id="adminAddMemberBlock" class="admin-only hidden">
+                <summary><strong>Добавить члена в комиссию</strong></summary>
+                <form id="addMemberToCommissionForm" class="grid two">
+                  <input type="hidden" name="commission_id" />
+                  <label>ID члена
+                    <input name="member_id" type="number" min="1" required />
+                  </label>
+                  <label>Дата вступления
+                    <input name="joined_at" type="date" required />
+                  </label>
+                  <label class="full">Дата выхода (опц.)
+                    <input name="left_at" type="date" />
+                  </label>
+                  <div class="full right">
+                    <button type="submit">Добавить</button>
+                  </div>
+                </form>
+              </details>
+            </div>
+
+            <div class="card">
+              <h4>Председатель</h4>
+              <div id="commissionChair"></div>
+
+              <details id="adminSetChairBlock" class="admin-only hidden">
+                <summary><strong>Назначить председателя</strong></summary>
+                <form id="setChairForm" class="grid two">
+                  <input type="hidden" name="commission_id" />
+                  <label>ID члена
+                    <input name="member_id" type="number" min="1" required />
+                  </label>
+                  <label>Дата начала
+                    <input name="start_date" type="date" required />
+                  </label>
+                  <div class="full right">
+                    <button type="submit">Назначить</button>
+                  </div>
+                </form>
+              </details>
+
+              <details class="mt">
+                <summary><strong>История председателей</strong></summary>
+                <div id="chairsHistory"></div>
+              </details>
+            </div>
+          </div>
+        </div>
+      </dialog>
+    </section>
+
+    <!-- Члены -->
+    <section id="tab-members" class="tabpane hidden">
+      <div class="pane-header">
+        <h2>Члены муниципалитета</h2>
+        <div id="adminMemberControls" class="admin-only hidden">
+          <details class="card">
+            <summary><strong>Добавить члена</strong> (только администратор)</summary>
+            <form id="createMemberForm" class="grid two">
+              <label>ФИО
+                <input name="full_name" type="text" required />
+              </label>
+              <label>Адрес
+                <input name="address" type="text" />
+              </label>
+              <label>Дом. телефон
+                <input name="home_phone" type="text" />
+              </label>
+              <label>Раб. телефон
+                <input name="work_phone" type="text" />
+              </label>
+              <div class="full right">
+                <button type="submit">Создать</button>
+              </div>
+            </form>
+          </details>
+        </div>
+      </div>
+
+      <div id="membersList" class="list"></div>
+
+      <dialog id="memberDialog" class="modal">
+        <div class="modal-body">
+          <button class="modal-close" data-close>×</button>
+          <h3 id="memberTitle"></h3>
+          <div id="memberContacts" class="muted"></div>
+
+          <div class="split">
+            <div class="card">
+              <h4>Участие в комиссиях</h4>
+              <div id="memberCommissions"></div>
+            </div>
+            <div class="card">
+              <h4>Периоды председательства</h4>
+              <div id="memberChairs"></div>
+            </div>
+          </div>
+        </div>
+      </dialog>
+    </section>
+
+    <!-- Заседания -->
+    <section id="tab-meetings" class="tabpane hidden">
+      <div class="pane-header">
+        <h2>Заседания</h2>
+        <div id="adminMeetingControls" class="admin-only hidden">
+          <details class="card">
+            <summary><strong>Добавить заседание</strong> (только администратор)</summary>
+            <form id="createMeetingForm" class="grid two">
+              <label>ID комиссии
+                <input name="commission_id" type="number" min="1" required />
+              </label>
+              <label>Дата и время
+                <input name="held_at" type="datetime-local" required />
+              </label>
+              <label class="full">Место
+                <input name="place" type="text" required />
+              </label>
+              <div class="full right">
+                <button type="submit">Создать заседание</button>
+              </div>
+            </form>
+          </details>
+        </div>
+      </div>
+
+      <form id="filterMeetingsForm" class="grid three card">
+        <label>ID комиссии
+          <input name="commission_id" type="number" min="1" required />
+        </label>
+        <label>С (дата)
+          <input name="from" type="date" />
+        </label>
+        <label>По (дата)
+          <input name="to" type="date" />
+        </label>
+        <div class="full right">
+          <button type="submit">Показать заседания</button>
+        </div>
+      </form>
+
+      <div id="meetingsList" class="list"></div>
+
+      <dialog id="meetingDialog" class="modal">
+        <div class="modal-body">
+          <button class="modal-close" data-close>×</button>
+          <h3 id="meetingTitle"></h3>
+          <div id="meetingMeta" class="muted"></div>
+
+          <div class="card">
+            <h4>Посещаемость</h4>
+            <div id="attendanceList"></div>
+
+            <details id="adminAttendanceBlock" class="admin-only hidden">
+              <summary><strong>Изменить посещаемость</strong></summary>
+              <form id="attendanceForm" class="grid one">
+                <!-- динамически заполняется чекбоксами -->
+                <div class="right mt">
+                  <button type="submit">Сохранить посещаемость</button>
+                </div>
+              </form>
+            </details>
+          </div>
+        </div>
+      </dialog>
+    </section>
+
+    <!-- Отчёты -->
+    <section id="tab-reports" class="tabpane hidden">
+      <div class="pane-header">
+        <h2>Отчёты</h2>
+      </div>
+
+      <div class="split">
+        <div class="card">
+          <h4>Пропуски по комиссии за период</h4>
+          <form id="absencesForm" class="grid three">
+            <label>ID комиссии
+              <input name="commission_id" type="number" min="1" required />
+            </label>
+            <label>С (дата)
+              <input name="from" type="date" required />
+            </label>
+            <label>По (дата)
+              <input name="to" type="date" required />
+            </label>
+            <div class="full right">
+              <button type="submit">Сформировать</button>
+            </div>
+          </form>
+          <div id="absencesResult" class="table-wrap"></div>
+        </div>
+
+        <div class="card">
+          <h4>Количество заседаний по комиссиям</h4>
+          <form id="meetingsCountForm" class="grid two">
+            <label>С (дата)
+              <input name="from" type="date" required />
+            </label>
+            <label>По (дата)
+              <input name="to" type="date" required />
+            </label>
+            <div class="full right">
+              <button type="submit">Показать</button>
+            </div>
+          </form>
+          <div id="meetingsCountResult" class="table-wrap"></div>
+        </div>
+      </div>
+    </section>
+
+    <div id="toast" class="toast hidden"></div>
+  </main>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
